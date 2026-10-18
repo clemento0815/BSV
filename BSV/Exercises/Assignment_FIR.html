@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>BSV3-FIR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="icon" href="Resources/img/bsa.png">
+
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Indie+Flower">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="Resources/css/style.css">
+
+    <!-- For equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <svg display="none" width="0" height="0" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <symbol id="right-arrow" viewBox="0 0 39 10">
+        <path
+            d="M29.507 5.418L.501 5.141l.01-1 29.006.277.038-4 8.956 4.586-9.042 4.414.038-4z"
+            fill-rule="nonzero"
+        />
+      </symbol>
+      <symbol id="left-arrow" viewBox="0 0 39 10">
+        <path
+            d="M9.51 4.227l29.006.277-.01 1-29.005-.277-.038 4L.506 4.641 9.549.227l-.039 4z"
+            fill-rule="nonzero"
+        />
+      </symbol>
+      <symbol id="video" viewBox="0 35 128 56">
+        <rect x="21.694" y="40.412" width="63.593" height="46.781" rx="7.282" ry="10.964"
+                stroke="black" stroke-width="4" fill="none"/>
+        <polygon points="106.485,42.605 85.287,56.493 85.287,71.843 106.485,87.924 "
+                stroke="black" stroke-width="4" fill="none"/>
+        <polygon points="47.615,51.255 57.216,57.738 66.817,64.221 56.776,69.315 46.736,74.408 47.175,62.832 "
+                stroke="black" stroke-width="4" fill="none"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="PageWrapper">
+    <div class="topnav" id="myTopnav">
+
+      <a href="/" id="BSA_logo" class="FirstLink"><img
+          src="Resources/img/bsa.png" alt="Overview" width="50px" /></a>
+      <a href="Assignment_FIR.zip" class="nav-Link">Zipped</a>
+      <a href="Assignment_FIR.pdf" class="nav-Link">PDF_24</a>
+      <a href="https://work.thaslwanter.at/py_intro" class="nav-Link">Py7</a>
+      <a href="https://elearning.fh-ooe.at/mod/url/view.php?id=324755" class="nav-Link">SAPy</a>
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars"></i></a>
+
+    </div>
+    <div class="FlexWrapper">
+      <div class="Background">
+        <h1 class="MainHeader"> Assignment 3: FIR-Filters</h1>
+
+        <dev class="ruler">
+            <hr>
+        </dev>
+      </div>
+
+      <div class="Contents">
+        <!-- Exercise 1 -->
+        <h2 class="SubHeader">Smoothing CO2-Data</h2>
+
+        <div class="ExSpecification">
+          <ul>
+            <li>Read in data from <code>co2_mm_mlo.csv</code>. </li>
+
+            <li>Smooth the data with a Savitzky-Golay filter. Explain
+            your choice of window-size and polynomial-degree. </li>
+
+            <li>Smooth the data with a moving-average filter. Shift the
+                smoothed curve, so that so that there is no lag with respect to
+                the original data. Explain your choice of window-size. </li>
+
+              <li> Plot the raw data and the smoothed data on the same
+                graph, so that it is possible to judge by eye how
+                well the smoothing works. </li>
+          </ul>
+        </div>
+
+        <div class="Legacy">
+          <!-- Exercise 1 -->
+          <h2>Voluntary</h2>
+          <h3 class="SubHeader">Reading in Data</h3>
+          <div class="ExBackground">
+              <h4> Background </h4>
+              <p> A doctor has measured an electrocardiogram, but for some
+              reason, the signal is contaminated with high frequency
+              noise. The doctor asks you whether you would be able to
+              remove the high frequency noise from the signal so that he
+              can more easily see the shape of the underlying signal. You
+              decide to try to remove the high frequency noise by using a
+              simple FIR filter. </p>
+          </div>
+
+        <div class="ExSpecification">
+          <h4> Problem specification</h4>
+          <p> Write a function that does the following: </p>
+          <ul>
+            <li>Ask the user to select an in-file, which can have
+                the extension '.dat', '.txt', or 'mat'. Interactive
+                selections can be done elegantly with the package
+                <code>FreeSimpleGUI</code>. Since
+                <code>FreeSimpleGUI</code> is missing in many Python
+                distributions, you probably first have to install it
+                from a <em>command terminal(!)</em> with
+
+                <p><code>pip install FreeSimpleGui</code> </p>
+
+                The package can then be imported (in Python) using
+
+                <p> <code> import FreeSimpleGUI as sg </code> </p>
+
+                For the selection of a data file, you can use
+
+            </li>
+
+              <pre>
+
+file_name = sg.popup_get_file('Select the data-file',
+        no_window=True,
+        file_types=(('Data Files', ['*.dat', '*.mat', '*.txt']),))
+</pre>
+              <li>
+                  Determine the chosen extension.
+
+                  <br><b>Tip:</b> 
+                  The class <code>Path</code> from the package
+                  <code>pathlib</code> provides many helpful functions to work
+                  with file-paths. For example with <code>file =
+                    Path('C:/Users/thomas')</code>, we can get the parent
+                  folder with <code>file.parent</code>, the stem with
+                  <code>file.stem</code>, and the extension with
+                  <code>file.suffix</code> (attention - the extension includes
+                  the "."!).
+              </li>
+
+
+
+              <li>If the user selects the extension <code>.dat</code>
+                  or <code>.txt</code>, load the data with
+                  <code>pd.read_csv</code>. If the file has the
+                  extension <code>.mat</code>, the file is a
+                  <em>Matlab</em> data file, and you can assume that
+                  the name of the loaded variable is
+                  <code>ecg_hfn</code>. Be careful to note that
+                  <code>pd.read_csv</code> returns a
+                  <code>DataFrame</code>! If the
+                  <code>DataFrame</code> is called <code>df</code>, the
+                  corresponding <code>np.array</code> can be accessed
+                  with <code>df.values</code> 
+              </li>
+
+              <li>Return the data that have been read in.</li>
+
+          </ul>
+        </div>
+
+          <!-- Exercise 2 -->
+          <h3 class="SubHeader">Smoothing ECG-Data</h3>
+
+          <div class="ExSpecification">
+              <ul>
+                  <li>Import the data as described in <em>Ex 1</em> </li>
+
+                  <li> Use a moving average filter to reduce the high
+                      frequency noise without changing the shape of the
+                      underlying signal. </li>
+
+                  <li> Use a Savitzky-Golay filter to reduce the high
+                      frequency noise without changing the shape of the
+                      underlying signal. </li>
+
+                  <li> Plot the raw data and the smoothed data on the same
+                      graph, so that it is possible to judge by eye how
+                      well the smoothing works. </li>
+              </ul>
+          </div>
+
+
+          <!-- Exercise 3 -->
+          <h3 class="SubHeader">Heartbeat and Differentiation</h3>
+
+          <div class="ExBackground">
+              <h4> Background </h4>
+              <p> The doctor is happy with the results of the filtering
+                  that you have performed. Now, however, the doctor would
+                  like to know what the average heart rate of the patient
+              was. One way of determining heart rate is to measure the
+              time that passes between two R peaks. </p>
+          </div>
+
+          <div class="ExSpecification">
+              <h4> Problem specification</h4>
+              <ul>
+
+                  <li> Ask the user to <em>interactively</em> select to
+                      adjacent R-peaks. This can be done with the command
+                      <code>plt.ginput(2)</code>. Use that information to
+                  estimate the sampling rate, and display this
+                  information.</li>
+
+                  <li>Hint: you can use <code>plt.title(...)</code> to
+                      tell the user what to do.</li>
+
+                  <li> Once you know the sampling rate, differentiate the
+                      data  and show the results.</li>
+              </ul>
+          </div>
+
+
+          <!-- Exercise 4 -->
+          <h3 class="SubHeader">Plotting Derivatives</h3>
+
+          <div class="ExSpecification">
+              <ul>
+                  <li> Use a Savitzky-Golay filter to estimate the first derivative of the ECG signal. </li>
+
+                  <li> Use a Savitzky-Golay filter to estimate the second derivative of the ECG signal. </li>
+
+                  <li>Show the smoothed data (i.e., the zeroth derivative) and the
+                  first and second derivatives, all in the same figure.</li>
+
+                  <li>Use the object-oriented plotting style
+
+                      <p><code>fig, axs = plt.subplots(3, 1,
+                              sharex=True)</code></p>
+                      and
+                      <p><code>axs[..].plot(...)</code></p>
+                  to simultaneously zoom in on all x-axes. If you are
+                  working in a <em>Jupyter</em> environment, first switch to
+                  an external graphics window with
+                  <code>%matplotlib</code>. You can switch back to inline
+                  display of graphics with <code>%matplotlib inline</code>.
+                  </li>
+
+              </ul>
+          </div>
+
+      </div>
+          </div>
+          <div class="Footer">
+              <address>
+                  Written by Thomas Haslwanter at fh-ooe.at<br>
+                  WS 2025/26
+              </address>
+          </div>
+      </div>
+
+  </div>
+  <!-- Script to toggle between adding and removing the "responsive" class to topnav
+      when the user clicks on the icon -->
+  <script src="Resources/js/topnav.js"></script>
+
+</body>
+
+</html>
