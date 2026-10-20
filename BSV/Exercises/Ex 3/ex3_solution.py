@@ -1,4 +1,4 @@
-""" Smoothing CO2-Data """
+""" Smoothing CO2-Data (done on VSC with Python 3.11.4, without Artificial Intelligence) """
 
 # author: Clemens Loher
 # date: 2026-10-18
