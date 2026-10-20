@@ -27,7 +27,7 @@ if __name__ == '__main__':
     weights = np.ones(window_size)/window_size
     co2_moving_avg = np.convolve(co2, weights, mode='valid') # plot only the valid part of the convolution to avoid edge effects
     
-    # Correct the years for the moving average to match the length of the filtered data
+    # correct the years for the moving average to match the length of the filtered data
     offset = window_size // 2
     years_valid = years[offset : len(years) - (window_size - 1 - offset)]
     
