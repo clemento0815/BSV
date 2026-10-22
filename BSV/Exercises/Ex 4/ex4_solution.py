@@ -11,7 +11,6 @@ from scipy import signal
 import pydicom
 
 if __name__ == '__main__':
-  main part of your code
 
 
 %history
