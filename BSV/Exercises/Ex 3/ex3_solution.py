@@ -11,23 +11,23 @@ from scipy import signal
 
 if __name__ == '__main__':
     
-    # load data
+    # %% load data
     data = np.loadtxt("co2_mm_mlo.csv", delimiter=",", skiprows=41)
     months = data[:,1]
     years = data[:,2]
     co2 = data[:,3]
     
-    # savgol filter
+    # %% savgol filter
     window_length = 15 # We choose a window length of 15 months, which is an odd number and large enough to smooth the data but not too large to lose important features
     polyorder = 6 # because polyorder 3 would cut off the spikes in the data, we choose a higher order polynomial to better fit the data
     co2_savgol = signal.savgol_filter(co2, window_length = window_length, polyorder = polyorder)
     
-    # moving average
+    # %% moving average
     window_size = 12 # Because we have monthly data, we take a window size of 12 months
     weights = np.ones(window_size)/window_size
     co2_moving_avg = np.convolve(co2, weights, mode='valid') # plot only the valid part of the convolution to avoid edge effects
     
-    # correct the years for the moving average to match the length of the filtered data
+    # %% correct the years for the moving average to match the length of the filtered data
     offset = window_size // 2
     years_valid = years[offset : len(years) - (window_size - 1 - offset)]
     
