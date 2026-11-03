@@ -13,9 +13,9 @@ import pydicom
 if __name__ == '__main__':
 
 
-%history
-dir
-ls
+
+
+
 in_file = 'SER00002/2A1A1ADC'
 pydicom.dcmread(in_file)
 data = pydicom.dcmread(in_file)
@@ -29,8 +29,4 @@ plt.imshow(img_data)
 plt.imshow(img_data, cmap = 'gray')
 img_data
 plt.imshow(img_data, cmap = 'jet')
-plt.imshow(img_data, cmap = 'jet'); colormap()
-plt.imshow(img_data, cmap = 'jet'); colorbar()
-plt.imshow(img_data, cmap = 'jet')
-plt.colorbar()
 plt.imshow(img_data, cmap = 'jet'); plt.colorbar()
