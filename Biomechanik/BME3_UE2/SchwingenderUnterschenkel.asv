@@ -1,0 +1,43 @@
+% Matlab Skript - schwingender Unterschenkel
+clear all;
+% Laden der Messdaten
+load("TrackedMarkers.mat")
+
+% Plotten der Daten
+figure(1);
+plot(timePlot.t, timePlot.phi, LineWidth=2);
+grid on;
+xlabel(" t(s)");
+
+
+% Messdaten für Simulink vrobereiten
+% erster peak bei 1.76sec, Periodendauer 1.12 sec
+t0=1.76-1.12;
+data.time = timePlot.t - t0;
+data.signals.values = timePlot.phi;
+
+% Definieren der Parameter
+m = 4; % Masse US
+Thetazz = 0.495; % Massenträgheit
+ls = 0.4; % Abstand Massenschwerpunkt
+g = 9.81;
+mu = 0.45;
+
+% Anfangsbedingungen
+phi0 = interp1(timePlot.t, timePlot.phi, t0);
+omega0 = 0;
+
+% Eigenwerte berechnen
+A = [0 1; -m*g*ls/Thetazz -mu/Thetazz];
+lambda = eig(A);
+
+T = 2*pi/imag(lambda(1))
+
+
+% Simulation ausführen
+out = sim("Leg.slx")
+
+% Ergebnisse plotten
+figure(2);
+plot(out.results.time, out.results.signals.values)
+grid
